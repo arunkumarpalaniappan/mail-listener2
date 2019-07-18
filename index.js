@@ -1,10 +1,10 @@
-var Imap = require('imap');
-var util = require('util');
-var EventEmitter = require('events').EventEmitter;
-var MailParser = require("mailparser").MailParser;
-var fs = require("fs");
-var path = require('path');
-var async = require('async');
+const Imap = require('imap');
+const util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const MailParser = require("mailparser").MailParser;
+const fs = require("fs");
+const path = require('path');
+const async = require('async');
 
 module.exports = MailListener;
 
@@ -65,7 +65,7 @@ MailListener.prototype.restart = function() {
 };
 
 function imapReady() {
-  var self = this;
+  let self = this;
   this.imap.openBox(this.mailbox, false, function(err, mailbox) {
     if (err) {
       self.emit('error', err);
@@ -74,7 +74,7 @@ function imapReady() {
       if (self.fetchUnreadOnStart) {
         parseUnread.call(self);
       }
-      var listener = imapMail.bind(self);
+      let listener = imapMail.bind(self);
       self.imap.on('mail', listener);
       self.imap.on('update', listener);
     }
@@ -99,7 +99,7 @@ function imapMail() {
 }
 
 function parseUnread() {
-  var self = this;
+  let self = this;
   this.imap.search(self.searchFilter, function(err, results) {
     if (err) {
       self.emit('error', err);
@@ -113,14 +113,14 @@ function parseUnread() {
 
 
       async.each(results, function (result, callback) {
-        var f = self.imap.fetch(result, {
+        let f = self.imap.fetch(result, {
           bodies: '',
           markSeen: self.markSeen
         });
         f.on('message', function(msg, seqno) {
-          var parser = new MailParser(self.mailParserOptions);
-          var attributes = null;
-          var emlbuffer = new Buffer('');
+          let parser = new MailParser(self.mailParserOptions);
+          let attributes = null;
+          let emlbuffer = new Buffer('');
 
           parser.on("end", function(mail) {
             mail.eml = emlbuffer.toString('utf-8');
